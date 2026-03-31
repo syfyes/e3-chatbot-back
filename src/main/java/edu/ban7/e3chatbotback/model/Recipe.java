@@ -1,11 +1,13 @@
 package edu.ban7.e3chatbotback.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import edu.ban7.e3chatbotback.view.AppUserView;
 import edu.ban7.e3chatbotback.view.RecipeView;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,5 +30,11 @@ public class Recipe {
     @ManyToOne(optional = false)
     @JsonView(RecipeView.class)
     private AppUser creator;
+
+    @ManyToMany
+    private List<Tag> tags = new ArrayList<>();
+
+    @ManyToMany
+    private List<Product> products = new ArrayList<>();
 
 }

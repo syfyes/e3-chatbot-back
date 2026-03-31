@@ -32,16 +32,16 @@ public class RecipeController {
     }
 
     @GetMapping("/recipe/{id}")
-    @JsonView(RecipeView.class)
-    @IsUser
-    public ResponseEntity<Recipe> get(@PathVariable int id) {
+        @JsonView(RecipeView.class)
+        @IsUser
+        public ResponseEntity<Recipe> get(@PathVariable int id) {
 
-        Optional<Recipe> optionalRecipe = recipeDao.findById(id);
+            Optional<Recipe> optionalRecipe = recipeDao.findById(id);
 
-        //si l'id de l'utilisateur n'existe pas en BDD on retourne un code 404
-        if(optionalRecipe.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+            //si l'id de l'utilisateur n'existe pas en BDD on retourne un code 404
+            if(optionalRecipe.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
         //on retourne l'utilisateur
         return new ResponseEntity<>(optionalRecipe.get(), HttpStatus.OK);
