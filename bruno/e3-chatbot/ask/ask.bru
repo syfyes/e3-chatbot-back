@@ -6,10 +6,21 @@ meta {
 
 post {
   url: http://localhost:8080/ask
-  body: none
-  auth: inherit
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhQGEuY29tIiwicm9sZSI6ImFkbWluIn0.PleGLCEFkamFNQmBXlJPmzosl5p5VAcwBDvu-MmdPfo
+}
+
+body:json {
+  {
+    "content" : "plat italien plein de fromage"
+  }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }
