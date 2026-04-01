@@ -30,4 +30,4 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name : Docker
-      run: docker image build estiam-back .
+      run: docker image build -t estiam-back .
