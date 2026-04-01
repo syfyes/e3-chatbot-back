@@ -1,7 +1,5 @@
 package edu.ban7.e3chatbotback.controller;
 
-import com.google.genai.Client;
-import com.google.genai.types.GenerateContentResponse;
 import edu.ban7.e3chatbotback.dao.RecipeDao;
 import edu.ban7.e3chatbotback.model.Question;
 import edu.ban7.e3chatbotback.model.Recipe;
