@@ -32,9 +32,11 @@ public class Recipe {
     private AppUser creator;
 
     @ManyToMany
+    @JsonView(RecipeView.class)
     private List<Tag> tags = new ArrayList<>();
 
     @ManyToMany
+    @JsonView(RecipeView.class)
     private List<Product> products = new ArrayList<>();
 
 }

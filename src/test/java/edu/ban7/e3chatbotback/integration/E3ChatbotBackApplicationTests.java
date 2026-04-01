@@ -1,4 +1,4 @@
-package edu.ban7.e3chatbotback;
+package edu.ban7.e3chatbotback.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -26,10 +26,12 @@ public class AppUser {
     @Column(nullable = false, unique = true)
     @Email(groups = {OnCreate.class, OnUpdate.class, OnLogin.class})
     @NotBlank(groups = {OnCreate.class, OnUpdate.class, OnLogin.class})
+    @JsonView
     private String email;
 
     @Column(nullable = false)
     @NotBlank(groups = {OnCreate.class, OnLogin.class})
+    @JsonView
     private String password;
 
     @Column(nullable = false)
@@ -37,5 +39,6 @@ public class AppUser {
     @JsonView({AppUserView.class , RecipeView.class})
     private String pseudo;
 
+    @JsonView
     private boolean admin = false;
 }
