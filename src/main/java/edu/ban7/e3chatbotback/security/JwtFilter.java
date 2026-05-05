@@ -1,7 +1,6 @@
 package edu.ban7.e3chatbotback.security;
 
 import io.jsonwebtoken.Jwts;
-import jakarta.persistence.Column;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,37 +15,63 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
-    UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
 
-        String token = request.getHeader("Authorization");
+        return path.equals("/login")
+                || path.equals("/sign-in")
+                || path.equals("/chat")        // ✅ OBLIGATOIRE
+                || path.startsWith("/swagger")
+                || path.startsWith("/v3/api-docs");
+    }
 
-        //s'il y a bien un token (possible qu'il n'y en ai pas, ex : pour login / sign-in)
-        if(token != null) {
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
 
-            String jwt = token.substring(7);
+        String authHeader = request.getHeader("Authorization");
 
-            String email = Jwts.parser()
-                    .setSigningKey("secret")
-                    .parseClaimsJws(jwt)
-                    .getBody()
-                    .getSubject();
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            try {
+                String jwt = authHeader.substring(7);
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                String email = Jwts.parser()
+                        .setSigningKey("secret")
+                        .parseClaimsJws(jwt)
+                        .getBody()
+                        .getSubject();
 
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            usernamePasswordAuthenticationToken
-                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                UserDetails userDetails =
+                        userDetailsService.loadUserByUsername(email);
 
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource()
+                                .buildDetails(request)
+                );
+
+                SecurityContextHolder.getContext()
+                        .setAuthentication(authentication);
+
+            } catch (Exception e) {
+                SecurityContextHolder.clearContext();
+            }
         }
 
         filterChain.doFilter(request, response);

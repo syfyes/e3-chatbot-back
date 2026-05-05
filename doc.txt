@@ -1,0 +1,13 @@
+## Backend – Spring Boot
+
+### Stack
+- Java 17
+- Spring Boot
+- Spring Security (JWT)
+- PostgreSQL
+- Spring AI (Google Gemini)
+
+### Lancer le backend en local
+bash
+./mvnw clean package
+java -jar target/app.jar
